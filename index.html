@@ -1,0 +1,347 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact Us — Cool Living Quarters</title>
+  <link rel="icon" type="image/png" href="assets/clq.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --navy:    #00457C;
+      --navy-dk: #002f57;
+      --navy-lt: #1a6faa;
+      --sky:     #e8f4fd;
+      --white:   #ffffff;
+      --off:     #f7f9fc;
+      --gray:    #6b7280;
+      --gray-lt: #e5e7eb;
+      --text:    #1f2937;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--white); color: var(--text); font-family: 'Lato', sans-serif; font-size: 16px; line-height: 1.7; overflow-x: hidden; }
+    h1,h2,h3,h4 { font-family: 'Quicksand', sans-serif; font-weight: 700; color: var(--navy); line-height: 1.3; }
+    a { color: var(--navy); text-decoration: none; }
+    a:hover { color: var(--navy-lt); }
+
+    .top-bar { background: var(--navy); color: rgba(255,255,255,0.85); font-size: 0.85rem; padding: 0.5rem 0; text-align: center; font-family: 'Quicksand', sans-serif; font-weight: 500; letter-spacing: 0.03em; }
+    .top-bar a { color: rgba(255,255,255,0.85); font-weight: 600; }
+    .top-bar a:hover { color: #fff; }
+
+    header { background: var(--white); border-bottom: 2px solid var(--navy); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,69,124,0.08); }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 1.5rem; max-width: 1140px; margin: 0 auto; }
+    .logo-wrap { display: flex; align-items: center; gap: 0.75rem; }
+    .logo-wrap img { width: 56px; height: 56px; object-fit: contain; }
+    .logo-name { font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 1.2rem; color: var(--navy); letter-spacing: 0.02em; line-height: 1.1; }
+    .logo-tagline { font-size: 0.7rem; color: var(--gray); font-family: 'Quicksand', sans-serif; letter-spacing: 0.08em; text-transform: uppercase; }
+    nav ul { display: flex; list-style: none; gap: 0.25rem; align-items: center; }
+    nav ul a { font-family: 'Quicksand', sans-serif; font-weight: 600; font-size: 0.88rem; color: var(--navy); padding: 0.45rem 0.9rem; border-radius: 6px; transition: background 0.2s, color 0.2s; }
+    nav ul a:hover, nav ul a.active { background: var(--sky); color: var(--navy-dk); }
+    .nav-cta { background: var(--navy) !important; color: #fff !important; border-radius: 6px !important; padding: 0.45rem 1.1rem !important; }
+    .nav-cta:hover { background: var(--navy-lt) !important; }
+    .menu-toggle { display: none; background: none; border: none; cursor: pointer; padding: 0.4rem; flex-direction: column; gap: 5px; }
+    .menu-toggle span { display: block; width: 24px; height: 2px; background: var(--navy); border-radius: 2px; }
+
+    .breadcrumb { background: var(--off); border-bottom: 1px solid var(--gray-lt); padding: 0.65rem 1.5rem; font-size: 0.82rem; font-family: 'Quicksand', sans-serif; font-weight: 600; }
+    .breadcrumb .inner { max-width: 1140px; margin: 0 auto; display: flex; gap: 0.5rem; align-items: center; color: var(--gray); }
+    .breadcrumb a { color: var(--navy-lt); }
+    .breadcrumb .sep { color: var(--gray-lt); }
+
+    .page-hero { background: linear-gradient(135deg, var(--navy-dk) 0%, var(--navy) 60%, var(--navy-lt) 100%); color: #fff; padding: 4rem 1.5rem 3.5rem; text-align: center; position: relative; overflow: hidden; }
+    .page-hero::before { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); pointer-events: none; }
+    .page-hero .label { font-family: 'Quicksand', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #7dd3fc; display: block; margin-bottom: 0.6rem; opacity: 0; animation: fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) 0.2s forwards; }
+    .page-hero h1 { font-size: clamp(2rem, 5vw, 3rem); color: #fff; margin-bottom: 1rem; opacity: 0; animation: fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) 0.35s forwards; }
+    .page-hero p { font-size: 1.05rem; color: rgba(255,255,255,0.8); max-width: 600px; margin: 0 auto; opacity: 0; animation: fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) 0.5s forwards; }
+
+    /* NOTICE BANNER */
+    .notice-banner { background: #fef9ec; border-top: 3px solid #d97706; border-bottom: 1px solid #fde68a; padding: 1rem 1.5rem; }
+    .notice-inner { max-width: 1140px; margin: 0 auto; display: flex; align-items: flex-start; gap: 0.75rem; font-size: 0.9rem; }
+    .notice-inner svg { width: 20px; height: 20px; fill: #d97706; flex-shrink: 0; margin-top: 0.15rem; }
+    .notice-inner strong { color: #92400e; font-family: 'Quicksand', sans-serif; }
+    .notice-inner p { color: #78350f; margin: 0; }
+    .notice-inner a { color: #92400e; font-weight: 700; text-decoration: underline; }
+
+    /* MAIN LAYOUT */
+    .contact-layout { display: grid; grid-template-columns: 1fr 1.4fr; gap: 4rem; max-width: 1100px; margin: 0 auto; padding: 5rem 1.5rem; }
+
+    /* INFO COLUMN */
+    .section-label { font-family: 'Quicksand', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--navy-lt); margin-bottom: 0.5rem; display: block; }
+    .info-col h2 { font-size: 1.9rem; margin-bottom: 0.75rem; }
+    .info-col > p { color: var(--gray); margin-bottom: 2.5rem; font-size: 0.97rem; }
+
+    .contact-card { background: var(--off); border: 1px solid var(--gray-lt); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; display: flex; gap: 1rem; align-items: flex-start; transition: box-shadow 0.3s; }
+    .contact-card:hover { box-shadow: 0 4px 16px rgba(0,69,124,0.09); }
+    .contact-card-icon { width: 44px; height: 44px; background: var(--sky); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .contact-card-icon svg { width: 22px; height: 22px; fill: var(--navy); }
+    .contact-card h4 { font-size: 0.88rem; margin-bottom: 0.2rem; color: var(--navy); }
+    .contact-card a, .contact-card p { font-size: 0.9rem; color: var(--gray); display: block; margin: 0; }
+    .contact-card a { color: var(--navy-lt); font-weight: 600; }
+    .contact-card a:hover { color: var(--navy); }
+
+    .hours-box { background: var(--navy); border-radius: 12px; padding: 1.5rem; margin-top: 1.5rem; }
+    .hours-box h4 { color: #fff; font-family: 'Quicksand', sans-serif; font-size: 0.95rem; margin-bottom: 1rem; }
+    .hours-row { display: flex; justify-content: space-between; padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 0.85rem; }
+    .hours-row:last-child { border-bottom: none; }
+    .hours-row .day { color: rgba(255,255,255,0.75); }
+    .hours-row .time { color: #7dd3fc; font-weight: 600; font-family: 'Quicksand', sans-serif; }
+    .hours-row .closed { color: rgba(255,255,255,0.35); }
+    .hours-note { font-size: 0.78rem; color: rgba(255,255,255,0.5); margin-top: 0.75rem; font-style: italic; }
+
+    /* FORM COLUMN */
+    .form-col { }
+    .form-col h2 { font-size: 1.6rem; margin-bottom: 0.5rem; }
+    .form-col > p { color: var(--gray); font-size: 0.92rem; margin-bottom: 2rem; }
+    .form-group { margin-bottom: 1.25rem; }
+    .form-group label { display: block; font-family: 'Quicksand', sans-serif; font-weight: 600; font-size: 0.84rem; color: var(--navy); margin-bottom: 0.4rem; letter-spacing: 0.02em; }
+    .form-group label span { color: #dc2626; margin-left: 2px; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; padding: 0.75rem 1rem; border: 1.5px solid var(--gray-lt); border-radius: 8px;
+      font-family: 'Lato', sans-serif; font-size: 0.92rem; color: var(--text); background: var(--white);
+      transition: border-color 0.2s, box-shadow 0.2s; outline: none;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      border-color: var(--navy-lt); box-shadow: 0 0 0 3px rgba(0,69,124,0.08);
+    }
+    .form-group textarea { resize: vertical; min-height: 130px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-note { font-size: 0.8rem; color: var(--gray); margin-top: 0.35rem; }
+    .btn-submit { background: var(--navy); color: #fff; font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.95rem; padding: 0.9rem 2.5rem; border-radius: 8px; border: none; cursor: pointer; letter-spacing: 0.03em; transition: background 0.25s, transform 0.2s; width: 100%; margin-top: 0.5rem; }
+    .btn-submit:hover { background: var(--navy-lt); transform: translateY(-2px); }
+    .success-msg { display: none; background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 10px; padding: 1.25rem 1.5rem; text-align: center; }
+    .success-msg h3 { color: #16a34a; font-size: 1.1rem; margin-bottom: 0.3rem; }
+    .success-msg p { color: #15803d; font-size: 0.9rem; }
+
+    /* REFERRAL CTA */
+    .referral-cta { background: var(--sky); border-top: 1px solid rgba(0,69,124,0.15); border-bottom: 1px solid rgba(0,69,124,0.15); padding: 3rem 1.5rem; }
+    .referral-inner { max-width: 800px; margin: 0 auto; display: flex; align-items: center; gap: 2rem; flex-wrap: wrap; }
+    .referral-inner .icon { width: 60px; height: 60px; background: var(--navy); border-radius: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .referral-inner .icon svg { width: 30px; height: 30px; fill: #fff; }
+    .referral-inner .text h3 { font-size: 1.2rem; margin-bottom: 0.3rem; }
+    .referral-inner .text p { color: var(--gray); font-size: 0.92rem; }
+    .btn-navy { background: var(--navy); color: #fff; font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.92rem; padding: 0.85rem 2rem; border-radius: 8px; letter-spacing: 0.03em; transition: all 0.25s; display: inline-block; margin-left: auto; white-space: nowrap; }
+    .btn-navy:hover { background: var(--navy-lt); transform: translateY(-2px); color: #fff; }
+
+    footer { background: var(--navy-dk); color: rgba(255,255,255,0.6); text-align: center; padding: 1.5rem; font-size: 0.82rem; font-family: 'Quicksand', sans-serif; }
+    footer a { color: rgba(255,255,255,0.6); }
+    footer a:hover { color: #fff; }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease, transform 0.8s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 768px) {
+      .menu-toggle { display: flex; }
+      nav { display: none; width: 100%; }
+      nav.open { display: block; position: absolute; top: 100%; left: 0; right: 0; background: var(--white); border-top: 1px solid var(--gray-lt); box-shadow: 0 8px 20px rgba(0,0,0,0.1); padding: 1rem; }
+      nav.open ul { flex-direction: column; gap: 0.25rem; }
+      nav.open ul a { display: block; padding: 0.65rem 1rem; }
+      .header-inner { position: relative; flex-wrap: wrap; }
+      .contact-layout { grid-template-columns: 1fr; gap: 2.5rem; padding: 3rem 1.5rem; }
+      .form-row { grid-template-columns: 1fr; }
+      .referral-inner { flex-direction: column; text-align: center; }
+      .btn-navy { margin-left: 0; }
+    }
+    @media (max-width: 480px) { .logo-tagline { display: none; } }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    24/7 Referrals &amp; Intake: <a href="tel:8442665226">(844) 266-5226</a> · <a href="mailto:info@coollivingquartersfc.com">info@coollivingquartersfc.com &nbsp;|&nbsp; Houston, Texas
+  </div>
+
+  <header>
+    <div class="header-inner">
+      <a href="https://coollivingquartersfc.com/" class="logo-wrap">
+        <img src="assets/clq.png" alt="Cool Living Quarters Logo"/>
+        <div>
+          <div class="logo-name">Cool Living Quarters</div>
+          <div class="logo-tagline">Compassionate Care At Its Finest</div>
+        </div>
+      </a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+      <nav id="mainNav">
+        <ul>
+          <li><a href="https://coollivingquartersfc.com">Home</a></li>
+          <li><a href="https://services.coollivingquartersfc.com">Our Services</a></li>
+          <li><a href="https://why.coollivingquartersfc.com">Why Choose Us</a></li>
+          <li><a href="https://contact.coollivingquartersfc.com">Contact</a></li>
+          <li><a href="https://referral.coollivingquartersfc.com" class="nav-cta">Make a Referral</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="breadcrumb">
+    <div class="inner">
+      <a href="https://coollivingquartersfc.com">Home</a>
+      <span class="sep">›</span>
+      <span>Contact</span>
+    </div>
+  </div>
+
+  <section class="page-hero">
+    <span class="label">Get In Touch</span>
+    <h1>Contact Us</h1>
+    <p>Have a general question about our program or services? We'd love to hear from you. For clinical referrals, please use our dedicated referral portal.</p>
+  </section>
+
+  <!-- CASEWORKER NOTICE -->
+  <div class="notice-banner">
+    <div class="notice-inner">
+      <svg viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+      <div>
+        <p><strong>Are you a caseworker or placing professional?</strong> This page is for general inquiries only. To securely submit a youth's clinical files for placement consideration, please use our <a href="https://referral.coollivingquartersfc.com">Confidential Referral Portal →</a></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="contact-layout">
+
+    <!-- INFO COLUMN -->
+    <div class="info-col reveal">
+      <span class="section-label">Reach Us</span>
+      <h2>Contact Information</h2>
+      <p>Our team is happy to answer general questions about our programs, our homes, and how we can help.</p>
+
+      <div class="contact-card">
+        <div class="contact-card-icon"><svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></div>
+        <div>
+          <h4>Phone</h4>
+          <a href="tel:8442665226">(844) 266-5226</a>
+          <p style="font-size:0.8rem; margin-top:0.2rem;">Admin hours: Mon–Fri 9am–5pm<br/>24/7 for urgent intake needs</p>
+        </div>
+      </div>
+
+      <div class="contact-card">
+        <div class="contact-card-icon"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
+        <div>
+          <h4>Email</h4>
+          <a href="mailto:info@coollivingquartersfc.com">info@coollivingquartersfc.com </a>
+          <p style="font-size:0.8rem; margin-top:0.2rem;">We typically respond within 1 business day</p>
+        </div>
+      </div>
+
+      <div class="contact-card">
+        <div class="contact-card-icon"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></div>
+        <div>
+          <h4>Location</h4>
+          <p>Houston, Texas</p>
+          <p style="font-size:0.8rem; margin-top:0.2rem;">Exact home addresses provided upon confirmed placement to protect resident privacy.</p>
+        </div>
+      </div>
+
+      <div class="hours-box">
+        <h4>Administrative Hours</h4>
+        <div class="hours-row"><span class="day">Monday</span><span class="time">9:00am – 5:00pm</span></div>
+        <div class="hours-row"><span class="day">Tuesday</span><span class="time">9:00am – 5:00pm</span></div>
+        <div class="hours-row"><span class="day">Wednesday</span><span class="time">9:00am – 5:00pm</span></div>
+        <div class="hours-row"><span class="day">Thursday</span><span class="time">9:00am – 5:00pm</span></div>
+        <div class="hours-row"><span class="day">Friday</span><span class="time">9:00am – 5:00pm</span></div>
+        <div class="hours-row"><span class="day">Saturday</span><span class="time">11:00am – 4:00pm</span></div>
+        <div class="hours-row"><span class="day">Sunday</span><span class="closed">By Appointment</span></div>
+        <p class="hours-note">Clinical &amp; crisis staff available 24/7, every day of the year.</p>
+      </div>
+    </div>
+
+    <!-- FORM COLUMN -->
+    <div class="form-col reveal" style="transition-delay:0.1s">
+      <h2>Send Us a Message</h2>
+      <p>Use this form for general inquiries — questions about our programs, services, or how Cool Living Quarters works. <strong>Do not</strong> submit confidential youth information here.</p>
+
+      <div id="contactForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label>First Name <span>*</span></label>
+            <input type="text" id="firstName" placeholder="Jane" required/>
+          </div>
+          <div class="form-group">
+            <label>Last Name <span>*</span></label>
+            <input type="text" id="lastName" placeholder="Smith" required/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email Address <span>*</span></label>
+          <input type="email" id="email" placeholder="jane@example.com" required/>
+        </div>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" id="phone" placeholder="(713) 000-0000"/>
+        </div>
+        <div class="form-group">
+          <label>I am a… <span>*</span></label>
+          <select id="role">
+            <option value="">— Please select —</option>
+            <option>Community member / General public</option>
+            <option>Parent or family member</option>
+            <option>Community organization or nonprofit</option>
+            <option>Media or journalist</option>
+            <option>Potential partner organization</option>
+            <option>Other</option>
+          </select>
+          <p class="form-note">Caseworkers and placing professionals: please use the <a href="https://referral.coollivingquartersfc.com/">Referral Portal</a> instead.</p>
+        </div>
+        <div class="form-group">
+          <label>Subject <span>*</span></label>
+          <input type="text" id="subject" placeholder="What is your inquiry about?"/>
+        </div>
+        <div class="form-group">
+          <label>Message <span>*</span></label>
+          <textarea id="message" placeholder="Tell us how we can help. Please do not include any confidential youth information in this form."></textarea>
+        </div>
+        <button class="btn-submit" onclick="submitForm()">Send Message</button>
+      </div>
+
+      <div class="success-msg" id="successMsg">
+        <h3>✓ Message Received</h3>
+        <p>Thank you for reaching out. A member of our team will get back to you within 1 business day.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- REFERRAL CTA -->
+  <div class="referral-cta">
+    <div class="referral-inner">
+      <div class="icon"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg></div>
+      <div class="text">
+        <h3>Are you a caseworker or placement professional?</h3>
+        <p>Use our secure Referral Portal to confidentially submit a youth's clinical files for admission consideration.</p>
+      </div>
+      <a href="https://referral.coollivingquartersfc.com/" class="btn-navy">Go to Referral Portal →</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 <a href="https://coollivingquartersfc.com/">Kevin Marts</a> · All Rights Reserved · Houston, TX · <a href="tel:8442665226">(844) 266-5226</a> · <a href="mailto:info@coollivingquartersfc.com">info@coollivingquartersfc.com</p>
+  </footer>
+
+  <script>
+    const toggle = document.getElementById('menuToggle');
+    const nav = document.getElementById('mainNav');
+    toggle.addEventListener('click', () => nav.classList.toggle('open'));
+    const reveals = document.querySelectorAll('.reveal');
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+    }, { threshold: 0.1 });
+    reveals.forEach(r => obs.observe(r));
+
+    function submitForm() {
+      const required = ['firstName','lastName','email','role','subject','message'];
+      let valid = true;
+      required.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el.value.trim()) { el.style.borderColor = '#dc2626'; valid = false; }
+        else { el.style.borderColor = ''; }
+      });
+      if (!valid) { return; }
+      document.getElementById('contactForm').style.display = 'none';
+      document.getElementById('successMsg').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
