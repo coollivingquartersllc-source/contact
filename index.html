@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -111,6 +110,12 @@
     .form-note { font-size: 0.8rem; color: var(--gray); margin-top: 0.35rem; }
     .btn-submit { background: var(--navy); color: #fff; font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.95rem; padding: 0.9rem 2.5rem; border-radius: 8px; border: none; cursor: pointer; letter-spacing: 0.03em; transition: background 0.25s, transform 0.2s; width: 100%; margin-top: 0.5rem; }
     .btn-submit:hover { background: var(--navy-lt); transform: translateY(-2px); }
+    .btn-submit:disabled { opacity: 0.7; cursor: wait; transform: none; }
+    .btn-submit:focus-visible { outline: 3px solid #7dd3fc; outline-offset: 3px; }
+    .form-error { display: none; background: #fef2f2; color: #991b1b; border: 1.5px solid #fecaca; border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 1rem; font-size: 0.9rem; }
+    .form-error.show { display: block; }
+    .success-msg .ref { margin-top: 0.5rem; font-weight: 700; }
+    .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
     .success-msg { display: none; background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 10px; padding: 1.25rem 1.5rem; text-align: center; }
     .success-msg h3 { color: #16a34a; font-size: 1.1rem; margin-bottom: 0.3rem; }
     .success-msg p { color: #15803d; font-size: 0.9rem; }
@@ -151,7 +156,7 @@
 <body>
 
   <div class="top-bar">
-    24/7 Referrals &amp; Intake: <a href="tel:8442665226">(844) 266-5226</a> · <a href="mailto:info@coollivingquartersfc.com">info@coollivingquartersfc.com &nbsp;|&nbsp; Houston, Texas
+    24/7 Referrals &amp; Intake: <a href="tel:8442665226">(844) 266-5226</a> · <a href="mailto:info@coollivingquartersfc.com">info@coollivingquartersfc.com</a> &nbsp;|&nbsp; Houston, Texas
   </div>
 
   <header>
@@ -293,12 +298,15 @@
           <label>Message <span>*</span></label>
           <textarea id="message" placeholder="Tell us how we can help. Please do not include any confidential youth information in this form."></textarea>
         </div>
-        <button class="btn-submit" onclick="submitForm()">Send Message</button>
+        <div class="hp" aria-hidden="true"><label>Website <input type="text" id="website" tabindex="-1" autocomplete="off"/></label></div>
+        <div class="form-error" id="formError" role="alert"></div>
+        <button class="btn-submit" id="submitBtn" onclick="submitForm()">Send Message</button>
       </div>
 
       <div class="success-msg" id="successMsg">
         <h3>✓ Message Received</h3>
         <p>Thank you for reaching out. A member of our team will get back to you within 1 business day.</p>
+        <p class="ref">Your reference number: <span id="refNum"></span></p>
       </div>
     </div>
 
@@ -317,30 +325,86 @@
   </div>
 
   <footer>
-    <p>&copy; 2026 <a href="https://coollivingquartersfc.com/">Cool Living Quarters FC LLC</a> · All Rights Reserved · Houston, TX · <a href="tel:8442665226">(844) 266-5226</a> · <a href="mailto:info@coollivingquartersfc.com">info@coollivingquartersfc.com</p>
+    <p>&copy; 2026 <a href="https://coollivingquartersfc.com/">Cool Living Quarters FC LLC</a> · All Rights Reserved · Houston, TX · <a href="tel:8442665226">(844) 266-5226</a> · <a href="mailto:info@coollivingquartersfc.com">info@coollivingquartersfc.com</a> </p>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
+    // ── Connect to your Supabase project (Project Settings → API) ──────────
+    // The anon key is designed to be public. NEVER put the service_role key here.
+    const SUPABASE_URL = 'https://YOUR-PROJECT-REF.supabase.co';
+    const SUPABASE_ANON_KEY = 'YOUR-ANON-PUBLIC-KEY';
+    const CONFIGURED = !/YOUR-/.test(SUPABASE_URL + SUPABASE_ANON_KEY);
+    const sb = CONFIGURED
+      ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: false } })
+      : null;
+    const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+
     const toggle = document.getElementById('menuToggle');
     const nav = document.getElementById('mainNav');
     toggle.addEventListener('click', () => nav.classList.toggle('open'));
+
     const reveals = document.querySelectorAll('.reveal');
     const obs = new IntersectionObserver((entries) => {
       entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
-    }, { threshold: 0.1 });
+    }, { threshold: 0.08 });
     reveals.forEach(r => obs.observe(r));
 
-    function submitForm() {
+    function showFormError(msg) {
+      const box = document.getElementById('formError');
+      box.textContent = msg;
+      box.classList.add('show');
+    }
+
+    async function submitForm() {
+      document.getElementById('formError').classList.remove('show');
+      if (document.getElementById('website').value) return; // honeypot: bots only
+
       const required = ['firstName','lastName','email','role','subject','message'];
-      let valid = true;
+      let firstBad = null;
       required.forEach(id => {
         const el = document.getElementById(id);
-        if (!el.value.trim()) { el.style.borderColor = '#dc2626'; valid = false; }
-        else { el.style.borderColor = ''; }
+        const bad = !el.value.trim() || (id === 'email' && !EMAIL_RE.test(el.value.trim()));
+        el.style.borderColor = bad ? '#dc2626' : '';
+        if (bad && !firstBad) firstBad = el;
       });
-      if (!valid) { return; }
-      document.getElementById('contactForm').style.display = 'none';
-      document.getElementById('successMsg').style.display = 'block';
+      if (firstBad) {
+        showFormError('Please complete the highlighted fields with a valid email address.');
+        firstBad.focus();
+        return;
+      }
+      if (!CONFIGURED) {
+        showFormError('This form is not connected yet. Please email info@coollivingquartersfc.com or call (844) 266-5226.');
+        return;
+      }
+
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+      const v = id => document.getElementById(id).value.trim();
+
+      try {
+        const { data, error } = await sb.rpc('submit_ticket', {
+          p_type: 'contact',
+          p_name: v('firstName') + ' ' + v('lastName'),
+          p_email: v('email'),
+          p_phone: v('phone'),
+          p_subject: v('subject'),
+          p_payload: { role: v('role'), message: v('message') },
+          p_files: []
+        });
+        if (error) throw error;
+        document.getElementById('refNum').textContent = data;
+        document.getElementById('contactForm').style.display = 'none';
+        document.getElementById('successMsg').style.display = 'block';
+      } catch (e) {
+        console.error(e);
+        let msg = 'We could not send your message. Please try again, or email info@coollivingquartersfc.com.';
+        if (e && /rate limit/i.test(e.message || '')) msg = 'Too many messages from this email in the last hour. Please call (844) 266-5226.';
+        showFormError(msg);
+        btn.disabled = false;
+        btn.textContent = 'Send Message';
+      }
     }
   </script>
 </body>
